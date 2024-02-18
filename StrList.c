@@ -30,6 +30,7 @@ typedef struct _node
 Node *Node_alloc(char *data, Node *next)
 {
     Node *p = (Node *)malloc(sizeof(Node));
+    p->_data = (char *)malloc(strlen(data) * sizeof(char));
     strcpy(p->_data, data);
     p->_next = next;
     return p;
@@ -288,6 +289,7 @@ void StrList_reverse(StrList *StrList)
         prev = curr;
         curr = temp;
     }
+    StrList->_head = curr;
 }
 
 /*
@@ -295,27 +297,28 @@ void StrList_reverse(StrList *StrList)
  */
 void StrList_sort(StrList *StrList)
 {
-    int i = 0;
+    int currStrLen = 0;
     Node *temp = StrList->_head;
-    char *arr[] = malloc(StrList->_size * sizeof(char *));
+    char ** arr = (char **)malloc((size_t)StrList_printLen(StrList) * sizeof(char *));
 
     while (temp != NULL)
     {
-        arr[i] = temp->_data;
+        *(arr + currStrLen) = (char *)malloc(strlen(temp->_data) * sizeof(char));
+        *(arr + currStrLen) = temp->_data;
         temp = temp->_next;
-        i++;
+        currStrLen = strlen(temp->_data);
     }
 
     qsort(arr, StrList->_size, sizeof(char *), (void *)strcmp);
 
-    i = 0;
+    currStrLen = 0;
     temp = StrList->_head;
 
     while (temp != NULL)
     {
-        temp->_data = arr[i];
+        temp->_data = *(arr + currStrLen);
         temp = temp->_next;
-        i++;
+        currStrLen = strlen(temp->_data);
     }
 }
 
