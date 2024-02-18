@@ -17,4 +17,4 @@ Main.o: Main.c
 .PHONY: clean all
 
 clean:
-    rm -f *.o *.a *.so *.gch  StrList.o  Main.o
+	rm -f *.o *.a *.so *.gch  StrList.o  Main.o

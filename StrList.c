@@ -27,8 +27,7 @@ typedef struct _node
 // Node implementation
 //------------------------------------------------
 
-Node *Node_alloc(char *data,
-                 Node *next)
+Node *Node_alloc(char *data, Node *next)
 {
     Node *p = (Node *)malloc(sizeof(Node));
     strcpy(p->_data, data);
@@ -113,7 +112,7 @@ void StrList_insertAt(StrList *StrList, const char *data, int index)
         i++;
     }
     p2 = p1->_next;
-    p1->_next = Node_alloc(data, p1->_next);
+    p1->_next = Node_alloc((char*) data, p1->_next);
     p1->_next->_next = p2;
     ++(StrList->_size);
 }
@@ -298,7 +297,7 @@ void StrList_sort(StrList *StrList)
 {
     int i = 0;
     Node *temp = StrList->_head;
-    char *arr[] = (char **)malloc(StrList->_size * sizeof(char *));
+    char *arr[] = malloc(StrList->_size * sizeof(char *));
 
     while (temp != NULL)
     {
