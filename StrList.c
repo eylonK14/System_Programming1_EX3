@@ -27,13 +27,27 @@ typedef struct _node
 // Node implementation
 //------------------------------------------------
 
-Node *Node_alloc(char *data, Node *next)
+Node *Node_alloc(const char *data, Node *next)
 {
     Node *p = (Node *)malloc(sizeof(Node));
-    p->_data = (char *)malloc(strlen(data) * sizeof(char));
-    strcpy(p->_data, data);
-    p->_next = next;
-    return p;
+    if (p != NULL)
+    {
+        p->_data = (char *)malloc((strlen(data) + 1) * sizeof(char));
+        if (p->_data != NULL)
+        {
+            strcpy(p->_data, data);
+            p->_next = next;
+            return p;
+        }
+        else
+        {
+            return NULL;
+        }
+    }
+    else
+    {
+        return NULL;
+    }
 }
 
 void Node_free(Node *node)
@@ -51,7 +65,7 @@ typedef struct _StrList
 {
     Node *_head;
     size_t _size;
-} StrList , *Strlstptr;
+} StrList, *Strlstptr;
 
 /*
  * Allocates a new empty StrList.
@@ -96,25 +110,48 @@ size_t StrList_size(const StrList *StrList)
  */
 void StrList_insertLast(StrList *StrList, const char *data)
 {
-    StrList_insertAt(StrList, data, StrList->_size);
+    printf("ent");
+    Node *curr = StrList->_head;
+    Node *new = Node_alloc(data, NULL);
+    if (new != NULL)
+    {
+        printf("allocation successful");
+        while (curr->_next != NULL)
+        {
+            curr = curr->_next;
+        }
+        /*new->_next = curr->_next;*/
+        curr->_next = new;
+        ++(StrList->_size);
+        printf("add successful");
+    }
 }
 /*
  * Inserts an element at given index
  */
 void StrList_insertAt(StrList *StrList, const char *data, int index)
 {
-    int i = 1;
-    Node *p1 = StrList->_head;
-    Node *p2 = NULL;
 
-    while (i < index - 1 && p1 != NULL)
+    Node *curr = StrList->_head;
+    Node *new = Node_alloc((char *)data, NULL);
+    if (index < 0 || index > StrList->_size || new == NULL)
     {
-        p1 = p1->_next;
-        i++;
+        return;
     }
-    p2 = p1->_next;
-    p1->_next = Node_alloc((char*) data, p1->_next);
-    p1->_next->_next = p2;
+    if (index == 0)
+    {
+        new->_next = StrList->_head;
+        StrList->_head = new;
+    }
+    else
+    {
+        for (int i = 1; i < index; i++)
+        {
+            curr = curr->_next;
+        }
+        new->_next = curr->_next;
+        curr->_next = new;
+    }
     ++(StrList->_size);
 }
 /*
@@ -299,7 +336,7 @@ void StrList_sort(StrList *StrList)
 {
     int currStrLen = 0;
     Node *temp = StrList->_head;
-    char ** arr = (char **)malloc((size_t)StrList_printLen(StrList) * sizeof(char *));
+    char **arr = (char **)malloc((size_t)StrList_printLen(StrList) * sizeof(char *));
 
     while (temp != NULL)
     {
