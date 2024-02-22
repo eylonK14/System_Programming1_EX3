@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "StrList.h"
-
+#include <stdlib.h>
+#include <string.h>
 #define ENTER_AT_INDEX 2
 #define PRINT 3
 #define LENGTH 4
@@ -16,28 +17,27 @@
 
 int main(int argc, char **argv)
 {
-    char A = 0;
-    char *str =NULL;
+    
+    char *str="";
     int choise = 0, index = 0, wordCount=0;
     StrList *list = StrList_alloc();
 
     do
     {
         scanf("%d", &choise);
-
         switch (choise)
         {
         case 1:
-            A= getchar();
-            A++;
             scanf("%d", &wordCount);
-            scanf("%s", str);
-            
-            StrList_insertLast(list, str);
+            while (wordCount){
+                scanf("%[^\n]s", str);
+                StrList_insertLast(list, str);
+                wordCount--;
+            }       
             break;
         case ENTER_AT_INDEX:
             scanf("%d", &index);
-            scanf("%s", str);
+            scanf("%[^\n]s", str);
             StrList_insertAt(list, str, index);
             break;
         case PRINT:
@@ -55,7 +55,7 @@ int main(int argc, char **argv)
             StrList_count(list, str);
             break;
         case DELETE_ALL_TIMES:
-            scanf("%s", str);
+            scanf("%[^\n]s", str);
             StrList_remove(list, str);
             break;
         case DELETE_AT_INDEX:
