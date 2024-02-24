@@ -2,6 +2,7 @@
 #include "StrList.h"
 #include <stdlib.h>
 #include <string.h>
+
 #define ENTER_AT_INDEX 2
 #define PRINT 3
 #define LENGTH 4
@@ -17,10 +18,16 @@
 
 int main(int argc, char **argv)
 {
-    
-    char *str="";
-    int choise = 0, index = 0, wordCount=0;
+
+    char *str = "hello";
+    char *str2 = "to";
+    char *str3 = "you";
+    int choise = 0, index = 0, wordCount = 0;
     StrList *list = StrList_alloc();
+
+    StrList_insertLast(list, str);
+    StrList_insertLast(list, str2);
+    StrList_insertLast(list, str3);
 
     do
     {
@@ -29,11 +36,13 @@ int main(int argc, char **argv)
         {
         case 1:
             scanf("%d", &wordCount);
-            while (wordCount){
+            while (wordCount)
+            {
                 scanf("%[^\n]s", str);
+                puts(str);
                 StrList_insertLast(list, str);
                 wordCount--;
-            }       
+            }
             break;
         case ENTER_AT_INDEX:
             scanf("%d", &index);
@@ -44,11 +53,13 @@ int main(int argc, char **argv)
             StrList_print(list);
             break;
         case LENGTH:
-            printf("%d", StrList_printLen(list));
+            printf("%zu", StrList_size(list));
+            break;
         case PRINT_AT_INDEX:
             StrList_printAt(list, index);
+            break;
         case AMOUNT_OF_CHARS:
-            StrList_printLen(list);
+            printf("%d", StrList_printLen(list));
             break;
         case PRINT_ALL_TIMES:
             scanf("%s", str);
@@ -77,6 +88,8 @@ int main(int argc, char **argv)
             break;
         }
     } while (choise);
+
+    StrList_free(list);
 
     return 0;
 }

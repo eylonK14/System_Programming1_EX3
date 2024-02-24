@@ -36,17 +36,20 @@ Node *Node_alloc(const char *data, Node *next)
         if (p->_data != NULL)
         {
             strcpy(p->_data, data);
+            *(p->_data + (strlen(data) + 1)) = '\0';
             p->_next = next;
             return p;
         }
         else
         {
-            return NULL;
+            fprintf(stderr, "Error occurred while allocating the node!");
+            exit(1);
         }
     }
     else
     {
-        return NULL;
+        fprintf(stderr, "Error occurred while allocating the node!");
+        exit(1);
     }
 }
 
@@ -74,6 +77,11 @@ typedef struct _StrList
 StrList *StrList_alloc()
 {
     StrList *p = (StrList *)malloc(sizeof(StrList));
+    if (p == NULL)
+    {
+        fprintf(stderr, "Error occurred while allocating the list!");
+        exit(1);
+    }
     p->_head = NULL;
     p->_size = 0;
     return p;
@@ -110,20 +118,25 @@ size_t StrList_size(const StrList *StrList)
  */
 void StrList_insertLast(StrList *StrList, const char *data)
 {
-    printf("ent");
-    Node *curr = StrList->_head;
-    Node *new = Node_alloc(data, NULL);
-    if (new != NULL)
+    if (StrList->_head == NULL)
     {
-        printf("allocation successful");
-        while (curr->_next != NULL)
-        {
-            curr = curr->_next;
-        }
-        /*new->_next = curr->_next;*/
-        curr->_next = new;
+        StrList->_head = Node_alloc(data, NULL);
         ++(StrList->_size);
-        printf("add successful");
+    }
+    else
+    {
+        Node *curr = StrList->_head;
+        Node *new = Node_alloc(data, NULL);
+        if (new != NULL)
+        {
+            while (curr->_next != NULL)
+            {
+                curr = curr->_next;
+            }
+            /*new->_next = curr->_next;*/
+            curr->_next = new;
+            ++(StrList->_size);
+        }
     }
 }
 /*
@@ -201,8 +214,12 @@ int StrList_printLen(const StrList *Strlist)
 
     while (p1 != NULL)
     {
+        
+        if(p1->_data == NULL)
+            len += 0;
+        else
+            len += strlen(p1->_data);
         p1 = p1->_next;
-        len += strlen(p1->_data);
     }
 
     return len;

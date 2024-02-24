@@ -1,6 +1,6 @@
 CC=gcc
 
-FLAGS=-Wall -g
+FLAGS=-Wall -g -ggdb3
 
 MAIN_FILES= StrList.o  Main.o
 STRLIST_FILES= StrList.c  StrList.h
@@ -17,4 +17,4 @@ Main.o: Main.c
 .PHONY: clean all
 
 clean:
-	rm -f *.o *.a *.so *.gch  StrList.o  Main.o
+	rm -f *.o *.a *.so *.gch  StrList.o  Main.o StrList
