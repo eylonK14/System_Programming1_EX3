@@ -137,6 +137,8 @@ void StrList_insertLast(StrList *StrList, const char *data)
             curr->_next = new;
             ++(StrList->_size);
         }
+
+        Node_free(new);
     }
 }
 /*
@@ -254,12 +256,12 @@ void StrList_remove(StrList *StrList, const char *data)
     {
         if (!(strcmp(curr->_data, data)))
         {
-            prev->_next = prev->_next->_next;
+            prev->_next = curr->_next;
         }
         else
         {
+            prev = curr;
             curr = curr->_next;
-            prev = prev->_next;
         }
     }
 }

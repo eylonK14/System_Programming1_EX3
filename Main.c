@@ -45,9 +45,9 @@ int main(int argc, char **argv)
             }
             break;
         case ENTER_AT_INDEX:
-            scanf("%d", &index);
-            scanf("%[^\n]s", str);
-            StrList_insertAt(list, str, index);
+            //scanf("%d", &index);
+            //scanf("%[^\n]s", str);
+            StrList_insertAt(list, str, 1);
             break;
         case PRINT:
             StrList_print(list);
@@ -66,8 +66,8 @@ int main(int argc, char **argv)
             StrList_count(list, str);
             break;
         case DELETE_ALL_TIMES:
-            scanf("%[^\n]s", str);
-            StrList_remove(list, str);
+            //scanf("%[^\n]s", str);
+            StrList_remove(list, str2);
             break;
         case DELETE_AT_INDEX:
             StrList_removeAt(list, index);
