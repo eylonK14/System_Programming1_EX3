@@ -1,7 +1,7 @@
 #include <stdio.h>
-#include "StrList.h"
 #include <stdlib.h>
 #include <string.h>
+#include "StrList.h"
 
 #define ENTER_AT_INDEX 2
 #define PRINT 3
@@ -16,60 +16,79 @@
 #define SORT 12
 #define CHECK_SORTED 13
 
+char* getWord()
+{
+    char* str = NULL;
+    size_t len = 0;
+    getline(&str, &len, stdin);
+    str[strcspn(str, "\r\n")] = 0;
+    return str;
+}
+
 int main(int argc, char **argv)
 {
+    char *str = NULL;
 
-    char *str = "hello";
-    char *str2 = "to";
-    char *str3 = "you";
     int choise = 0, index = 0, wordCount = 0;
-    StrList *list = StrList_alloc();
 
-    StrList_insertLast(list, str);
-    StrList_insertLast(list, str2);
-    StrList_insertLast(list, str3);
+    StrList *list = StrList_alloc();
 
     do
     {
         scanf("%d", &choise);
+        getchar();
+
         switch (choise)
         {
         case 1:
+            StrList_free(list);
+            list = StrList_alloc();
             scanf("%d", &wordCount);
-            while (wordCount)
+            getchar();
+
+            str = getWord();
+
+            char *word = strtok(str, " ");
+            while (word != NULL)
             {
-                scanf("%[^\n]s", str);
-                puts(str);
-                StrList_insertLast(list, str);
+                StrList_insertLast(list, word);
+                word = strtok(NULL, " ");
                 wordCount--;
             }
+            if (wordCount != 0)
+                return 1;
             break;
         case ENTER_AT_INDEX:
-            //scanf("%d", &index);
-            //scanf("%[^\n]s", str);
-            StrList_insertAt(list, str, 1);
+            scanf("%d", &index);
+            getchar();
+            str = getWord();
+            StrList_insertAt(list, str, index);
             break;
         case PRINT:
             StrList_print(list);
             break;
         case LENGTH:
-            printf("%zu", StrList_size(list));
+            printf("%zu\n", StrList_size(list));
             break;
         case PRINT_AT_INDEX:
+            scanf("%d", &index);
+            getchar();
             StrList_printAt(list, index);
             break;
         case AMOUNT_OF_CHARS:
-            printf("%d", StrList_printLen(list));
+            printf("%d\n", StrList_printLen(list));
             break;
         case PRINT_ALL_TIMES:
-            scanf("%s", str);
-            StrList_count(list, str);
+            str = getWord();
+            printf("%d\n", StrList_count(list, str));
             break;
         case DELETE_ALL_TIMES:
-            //scanf("%[^\n]s", str);
-            StrList_remove(list, str2);
+            str = getWord();
+            StrList_remove(list, str);
             break;
         case DELETE_AT_INDEX:
+            scanf("%d", &index);
+            getchar();
             StrList_removeAt(list, index);
             break;
         case REVERSE:
@@ -82,7 +101,7 @@ int main(int argc, char **argv)
             StrList_sort(list);
             break;
         case CHECK_SORTED:
-            StrList_isSorted(list);
+            printf("%s\n", StrList_isSorted(list) ? "true" : "false");
             break;
         default:
             break;
@@ -90,6 +109,8 @@ int main(int argc, char **argv)
     } while (choise);
 
     StrList_free(list);
+    free(list);
+    free(str);
 
     return 0;
 }
