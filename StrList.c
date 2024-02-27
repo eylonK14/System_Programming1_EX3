@@ -96,42 +96,25 @@ StrList *StrList_alloc()
  * Frees the memory and resources allocated to StrList.
  * If StrList==NULL does nothing (same as free).
  */
-/*
 
-void StrList_free(StrList *StrList)
+void StrList_free(StrList *lst)
 {
-   if (StrList == NULL)
-       return;
-   Node *p1 = StrList->_head;
-   Node *p2;
-   while (p1)
-   {
-       p2 = p1;
-       p1 = p1->_next;
-       Node_free(p2);
-   }
-   free(StrList);
-}*/
-void StrList_free(StrList *StrList)
-{
-    if (StrList == NULL)
+    if (lst == NULL || lst->_head == NULL || lst->_size == 0)
     {
         return;
     }
-    Node *p1 = StrList->_head;
-    while (p1)
+    else
     {
-        Node *p2 = p1;
-        p1 = p1->_next;
+        Node *p1 = lst->_head;
+        while (p1)
+        {
+            Node *p2 = p1;
+            p1 = p1->_next;
+            Node_free(p2);
+        }
 
-        // Free the data string within the Node
-        // free(p2->_data);
-
-        // Then free the Node itself
-        Node_free(p2);
+        lst->_size = 0;
     }
-
-    StrList->_size = 0;
 }
 
 /*
@@ -139,6 +122,10 @@ void StrList_free(StrList *StrList)
  */
 size_t StrList_size(const StrList *StrList)
 {
+    if (StrList == NULL)
+    {
+        return 0;
+    }
     return StrList->_size;
 }
 /*
@@ -205,20 +192,23 @@ char *StrList_firstData(const StrList *StrList)
 /*
  * Prints the StrList to the standard output.
  */
-void StrList_print(const StrList *StrList)
+void StrList_print(const StrList *lst)
 {
-    const Node *p = StrList->_head;
-    if (StrList->_size < 0 || StrList == NULL || StrList->_head == NULL)
+    const Node *p = lst->_head;
+    if (lst == NULL || lst->_head == NULL || lst->_size == 0)
     {
         printf("\n");
-        return;
     }
-    while (p)
+    else
     {
-        printf("%s ", p->_data);
-        p = p->_next;
+        while (p->_next)
+        {
+            printf("%s ", p->_data);
+            p = p->_next;
+        }
+        printf("%s", p->_data);
+        printf("\n");
     }
-    printf("\n");
 }
 
 /*
@@ -311,6 +301,7 @@ void StrList_remove(StrList *list, const char *data)
                 prev->_next = curr->_next;
                 --(list->_size);
                 Node_free(curr);
+                curr = prev->_next;
             }
             else
             {
@@ -473,9 +464,12 @@ int StrList_isSorted(StrList *lst)
 
     StrList_free(list);
 
+    free(list);
+
     return eq;
 }
 
+/*the function uses as a comparison function for qsort */
 int cmpstr(void const *a, void const *b)
 {
     return strcmp(*(char const **)a, *(char const **)b);
