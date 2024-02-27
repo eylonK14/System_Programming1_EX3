@@ -352,7 +352,9 @@ void StrList_removeAt(StrList *list, int index)
  */
 int StrList_isEqual(const StrList *StrList1, const StrList *StrList2)
 {
-    if (StrList1 == NULL || StrList1->_head == NULL || StrList2 == NULL || StrList2->_head == NULL || StrList1->_size < 1 || StrList2->_size < 1)
+    if ((StrList1 == NULL && StrList2 == NULL) || (StrList1->_head == NULL && StrList2->_head == NULL) || (StrList1->_size < 1 && StrList2->_size < 1))
+        return 1;
+    else if (StrList1 == NULL || StrList1->_head == NULL || StrList2 == NULL || StrList2->_head == NULL || StrList1->_size < 1 || StrList2->_size < 1)
         return 0;
 
     const int neq = 0;
